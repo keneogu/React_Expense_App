@@ -46,12 +46,29 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  async function logoutUser() {
+    try {
+      await axios.get("http://localhost:5000/api/auth/logout");
+
+      dispatch({
+        type: "LOGOUT_SUCCESS",
+      });
+      localStorage.removeItem("user");
+    } catch (error) {
+      dispatch({
+        type: "LOGOUT_FAIL",
+        payload: error.response.data.message,
+      });
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
         user: state.user,
         error: state.error,
         loginUser,
+        logoutUser,
         loading: state.loading,
         isAuthenticate: state.isAuthenticate,
       }}
